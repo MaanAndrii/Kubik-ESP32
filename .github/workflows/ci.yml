@@ -1,0 +1,41 @@
+name: Kubik ESP32 CI
+on:
+  push:
+    paths: ["firmware/**", "companion/**", "tests/**", ".github/workflows/ci.yml"]
+  pull_request:
+    paths: ["firmware/**", "companion/**", "tests/**", ".github/workflows/ci.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m unittest discover -s tests -v
+      - run: python -m compileall -q companion
+  firmware:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    container: espressif/idf:v5.5.5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build for ESP32-S3
+        shell: bash
+        run: |
+          . /opt/esp/idf/export.sh
+          cd firmware/kubik-esp32
+          idf.py set-target esp32s3
+          idf.py build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kubik-esp32-build
+          path: |
+            firmware/kubik-esp32/build/kubik_esp32.bin
+            firmware/kubik-esp32/build/bootloader/bootloader.bin
+            firmware/kubik-esp32/build/partition_table/partition-table.bin
+            firmware/kubik-esp32/build/flasher_args.json
+            firmware/kubik-esp32/dependencies.lock

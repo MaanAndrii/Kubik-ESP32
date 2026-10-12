@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+firmware/**/sdkconfig
+firmware/**/sdkconfig.old
+firmware/**/build/
+firmware/**/managed_components/

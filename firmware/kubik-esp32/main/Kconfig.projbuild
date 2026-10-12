@@ -1,0 +1,14 @@
+menu "Kubik companion"
+config KUBIK_WIFI_SSID
+    string "Wi-Fi SSID"
+    default ""
+config KUBIK_WIFI_PASSWORD
+    string "Wi-Fi password"
+    default ""
+config KUBIK_DESKONE_URL
+    string "DeskOne base URL (http://PC-IP:8765, no trailing slash)"
+    default "http://192.168.1.100:8765"
+config KUBIK_TOKEN
+    string "DeskOne bridge token (24+ characters)"
+    default ""
+endmenu
